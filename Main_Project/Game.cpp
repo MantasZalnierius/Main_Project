@@ -1,6 +1,8 @@
 #include "Game.h"
 
-Game::Game() : m_exitGame{ false }
+Game::Game() : 
+	m_exitGame{ false },
+	m_spaitalMap(sf::FloatRect{ 0U, 0U, static_cast<float>(Window::getWindowWidth()), static_cast<float>(Window::getWindowHeight()) }, 15U, 3U)
 {
 }
 
@@ -74,9 +76,8 @@ void Game::processKeyEvents(sf::Event t_event)
 void Game::update(sf::Time t_deltaTime)
 {
 	for (auto& object : m_objects) {
+		object->setColor(sf::Color::Red);
 		object->update(t_deltaTime);
-		if (!Node::contains({ 0U, 0U, 800U, 600U }, object->getGlobalBounds()))
-			object->setVelocity({ object->getVelocity().y, -object->getVelocity().x });
 	}
 
 	m_spaitalMap.clear();
@@ -109,7 +110,7 @@ void Game::handleCollisions()
 	}
 	else
 	{
-		for (int i = 0; i < m_objects.size() - 1; ++i)
+		for (int i = 0; i < m_objects.size(); ++i)
 		{
 			std::vector<std::weak_ptr<Object>> nearbyColliders =
 				m_spaitalMap.getCollisionable(m_objects[i]->getGlobalBounds());

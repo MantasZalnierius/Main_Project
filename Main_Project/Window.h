@@ -35,8 +35,8 @@ private:
 	static const unsigned int m_WINDOW_WIDTH = 1600;
 	static const unsigned int m_WINDOW_HEIGHT = 1200;
 #else
-	static const unsigned int m_WINDOW_WIDTH = 800;
-	static const unsigned int m_WINDOW_HEIGHT = 600;
+	static const unsigned int m_WINDOW_WIDTH = 1600;
+	static const unsigned int m_WINDOW_HEIGHT = 900;
 #endif // LARGER_WINDOW_SIZE
 
 	static sf::RenderWindow m_window;

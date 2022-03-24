@@ -1,6 +1,8 @@
 #pragma once
 #include "GlobalHeaders.h"
 
+class Node;
+
 /// An entity is a circle that moves around the screen
 class Object : public sf::Transformable, public sf::Drawable
 {
@@ -21,6 +23,8 @@ public:
     /// Set the circle's color
     void setColor(sf::Color color);
 
+    void handleWindowBorderCollisions();
+
 protected:
     /// Draws to screen
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const noexcept override;
@@ -31,3 +35,5 @@ protected:
     /// The current velocity
     sf::Vector2f m_vel;
 };
+
+#include "Node.h"

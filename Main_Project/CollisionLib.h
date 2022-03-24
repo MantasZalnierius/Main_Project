@@ -11,10 +11,5 @@ public:
 			t_first.lock()->setColor(sf::Color::Cyan);
 			t_second.lock()->setColor(sf::Color::Cyan);
 		}
-		else
-		{
-			t_first.lock()->setColor(sf::Color::Red);
-			t_second.lock()->setColor(sf::Color::Red);
-		}
 	}
 };

@@ -25,8 +25,8 @@ private:
 	void handleCollisions();
 	bool m_exitGame; // control exiting game
 	std::vector<std::shared_ptr<Object>> m_objects;
-	QuadTree m_spaitalMap{ sf::FloatRect{ 0U, 0U, 800U, 600U }, 15U, 1U };
 	bool m_showSpatialMap = false;
+	QuadTree m_spaitalMap;
 };
 
 #endif // !GAME_HPP

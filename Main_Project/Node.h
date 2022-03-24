@@ -4,6 +4,15 @@
 
 class QuadTree;
 
+enum Position 
+{ 
+    NW = 0,
+    NE = 1, 
+    SW = 2, 
+    SE = 3 
+};
+
+
 class Node
 {
     friend class QuadTree;
@@ -34,18 +43,16 @@ private:
 
     /// Member variable declarations
 
-    sf::FloatRect mBounds;
-    size_t const mLevel;
-    size_t const& mMaxLevel, mMaxObjects;
+    sf::FloatRect m_border;
+    size_t const m_depth;
+    size_t const& m_maxDepth, m_maxObjects;
 
     // Pointers
-    Node* mParent{ nullptr };
-    std::vector<std::weak_ptr<Object>> mObjects{ };
-    std::vector<std::weak_ptr<Object>> mStuckObjects{ };
+    Node* m_head{ nullptr };
+    std::vector<std::weak_ptr<Object>> m_objects{ };
+    std::vector<std::weak_ptr<Object>> m_collidedObjects{ };
 
-    // Children
-    enum Position { NW = 0, NE = 1, SW = 2, SE = 3 };
-    std::array<std::unique_ptr<Node>, 4> mChildren{ { nullptr, nullptr, nullptr, nullptr } };
+    std::array<std::unique_ptr<Node>, 4> m_childNodes{ { nullptr, nullptr, nullptr, nullptr } };
 
-    bool isSubdivided{ false };
+    bool m_canSubdivide{ false };
 };
