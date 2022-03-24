@@ -1,3 +1,4 @@
+#include "Game.h"
 #ifdef _DEBUG 
 #pragma comment(lib,"sfml-graphics-d.lib") 
 #pragma comment(lib,"sfml-audio-d.lib") 
@@ -14,5 +15,8 @@
 
 int main()
 {
+	srand(static_cast<unsigned>(time(nullptr)));
+	Game game;
+	game.run();
 	return 1;
 }
