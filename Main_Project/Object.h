@@ -2,38 +2,24 @@
 #include "GlobalHeaders.h"
 
 class Node;
-
-/// An entity is a circle that moves around the screen
-class Object : public sf::Transformable, public sf::Drawable
+class Object : public sf::Transformable,
+    public sf::Drawable
 {
+private:
+    int m_hashKey; // Hash key for spaital hasing.
 public:
-    /// Construct a new entity at a given position
-    explicit Object(sf::Vector2f position);
-
-    /// Get the bounds of this entity, relative to its transform
+    explicit Object(sf::Vector2f t_position);
     sf::FloatRect getGlobalBounds() const noexcept;
-
-    /// Integrate over some amount of time
     void update(sf::Time const& dt);
-
-    /// Set/get the current velocity
     void setVelocity(sf::Vector2f velocity);
     sf::Vector2f const& getVelocity() const;
-
-    /// Set the circle's color
     void setColor(sf::Color color);
-
     void handleWindowBorderCollisions();
-
+    inline int getHashKey() { return m_hashKey; }
+    inline void setHashKey(int t_hashKey) { m_hashKey = t_hashKey; }
 protected:
-    /// Draws to screen
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const noexcept override;
-
-    /// The circle
-    sf::RectangleShape m_sprite;
-
-    /// The current velocity
-    sf::Vector2f m_vel;
+    sf::RectangleShape m_shape;
+    sf::Vector2f m_velocity;
 };
-
 #include "Node.h"
