@@ -5,21 +5,15 @@
 class QuadTree
 {
 public:
-    explicit QuadTree(sf::FloatRect bounds,
-        size_t maxLevel, size_t maxObjects);
-
+    explicit QuadTree(sf::FloatRect t_shapeBounds, size_t t_maxLevel, size_t t_maxObjects);
     size_t countObjects() const;
-
-    void insert(std::vector<std::shared_ptr<Object>> const& ptrArray);
-
+    void insert(std::vector<std::shared_ptr<Object>> const& t_objects);
     void clear();
-
-    void drawBorders(sf::RenderTarget& t) const;
-
-    std::vector<std::weak_ptr<Object>> getCollisionable(sf::FloatRect const& bounds) const;
+    void render(sf::RenderTarget& t_target) const;
+    std::vector<std::weak_ptr<Object>> getColliders(sf::FloatRect const& t_shapeBounds) const;
 private:
-    sf::FloatRect const mBounds;
-    size_t const mMaxLevel, mMaxObjects;
-
-    Node mRoot;
+    sf::FloatRect const m_shapeBounds;
+    size_t const m_maxLevel;
+    size_t const m_maxObjects;
+    Node m_head;
 };

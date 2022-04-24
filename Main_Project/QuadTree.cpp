@@ -1,35 +1,38 @@
 #include "QuadTree.h"
 
-QuadTree::QuadTree(sf::FloatRect bounds, size_t maxLevel, size_t maxObjects)
-    : mBounds{ std::move(bounds) },
-    mMaxLevel{ std::move(maxLevel) }, mMaxObjects{ std::move(maxObjects) },
-    mRoot{ mBounds, 0U, mMaxLevel, mMaxObjects }
+QuadTree::QuadTree(sf::FloatRect t_shapeBounds, size_t t_maxLevel, size_t t_maxObjects) :
+    m_shapeBounds{ t_shapeBounds },
+    m_maxLevel{ t_maxLevel },
+    m_maxObjects{ t_maxObjects },
+    m_head{ m_shapeBounds, 0U, m_maxLevel, m_maxObjects }
 {
 
 }
 
 size_t QuadTree::countObjects() const
 {
-    return std::move(mRoot.countObjects());
+    return std::move(m_head.countObjects());
 }
 
-void QuadTree::insert(std::vector<std::shared_ptr<Object>> const& ptrArray)
+void QuadTree::insert(std::vector<std::shared_ptr<Object>> const& t_objects)
 {
-    for (auto const& ptr : ptrArray)
-        mRoot.insert(static_cast<std::weak_ptr<Object>>(ptr));
+    for (auto const& object : t_objects)
+    {
+        m_head.insert(static_cast<std::weak_ptr<Object>>(object));
+    }
 }
 
 void QuadTree::clear()
 {
-    mRoot.clear();
+    m_head.clear();
 }
 
-void QuadTree::drawBorders(sf::RenderTarget& t) const
+void QuadTree::render(sf::RenderTarget& t_target) const
 {
-    mRoot.drawBorders(t);
+    m_head.render(t_target);
 }
 
-std::vector<std::weak_ptr<Object>> QuadTree::getCollisionable(sf::FloatRect const& bounds) const
+std::vector<std::weak_ptr<Object>> QuadTree::getColliders(sf::FloatRect const& t_shapeBounds) const
 {
-    return std::move(mRoot.getCollisionable(bounds));
+    return m_head.getColliders(t_shapeBounds);
 }
