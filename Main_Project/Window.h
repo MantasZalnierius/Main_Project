@@ -13,7 +13,7 @@ public:
 	/// This will get back the window width of the screen.
 	/// </summary>
 	/// <returns>Window width</returns>
-	inline static const unsigned int getWindowWidth() { return m_WINDOW_WIDTH; }
+	inline static const unsigned int getWindowWidth() { return m_WINDOW_WIDTH - 400; }
 
 	/// <summary>
 	/// This will get the window height of the screen.
