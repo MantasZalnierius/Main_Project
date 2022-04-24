@@ -9,3 +9,5 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "Window.h"
+
+static const unsigned int m_CELL_SIZE = 50;

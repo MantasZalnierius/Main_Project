@@ -24,7 +24,7 @@ public:
     void render();
 private:
     sf::Vector2u m_gridSize;
-    std::map<int, std::unordered_set<std::shared_ptr<Object>>> m_grid;
+    std::map<int, std::unordered_set<std::shared_ptr<Object>>> m_hashTable;
     int* m_offsetBetweenCells;
     int* m_offset;
 
