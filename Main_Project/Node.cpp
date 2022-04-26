@@ -43,20 +43,20 @@ void Node::subdivide()
     }
 }
 
-void Node::insert(std::weak_ptr<Object> ptr)
+void Node::insert(std::weak_ptr<Object> t_object)
 {
     if (m_canSubdivide)
     {
-        size_t index = getIndex(ptr.lock()->getGlobalBounds());
-        if (contains(m_childNodes[index]->m_shapeBounds, ptr.lock()->getGlobalBounds()))
+        size_t index = getIndex(t_object.lock()->getGlobalBounds());
+        if (contains(m_childNodes[index]->m_shapeBounds, t_object.lock()->getGlobalBounds()))
         {
-            m_childNodes[index]->insert(ptr);
+            m_childNodes[index]->insert(t_object);
             return;
         }
-        m_colliders.push_back(ptr);
+        m_colliders.push_back(t_object);
         return;
     }
-    m_objects.push_back(ptr);
+    m_objects.push_back(t_object);
     if (m_depth < m_maxDepth && m_objects.size() > m_maxObjects)
     {
         subdivide();

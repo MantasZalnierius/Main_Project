@@ -105,10 +105,6 @@ void Game::processMouseEvents(sf::Event t_event)
 			{
 				m_spaitalHashMap.addObject(obj);
 			}
-			else
-			{
-				m_quadTreeMap.insert(m_objects);
-			}
 			m_numberOfObjectsText.setString("OBJECTS: " + std::to_string(m_objects.size()));
 		}
 	}
