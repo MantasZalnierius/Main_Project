@@ -28,7 +28,7 @@ private:
     std::vector<std::weak_ptr<Object>> getColliders(sf::FloatRect const& t_objectBounds) const;
     std::vector<std::weak_ptr<Object>> getObjects() const;
 
-    bool m_canSubdivide{ false };
+    bool m_isSubdived{ false };
     sf::FloatRect m_shapeBounds;
     size_t const m_depth;
     size_t const& m_maxDepth;

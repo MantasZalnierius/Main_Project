@@ -9,7 +9,7 @@ Node::Node(sf::FloatRect t_shapeBounds, size_t t_level, size_t const& t_maxLevel
 
 size_t Node::countObjects() const
 {
-    if (!m_canSubdivide)
+    if (!m_isSubdived)
     {
         return std::count_if(m_objects.begin(), m_objects.end(), [](auto& obj)->bool { return !obj.expired(); });
     }
@@ -23,7 +23,7 @@ size_t Node::countObjects() const
 
 void Node::subdivide()
 {
-    if (m_canSubdivide)
+    if (m_isSubdived)
     {
         return;
     }
@@ -39,13 +39,13 @@ void Node::subdivide()
         {
             child->m_head = this;
         }
-        m_canSubdivide = true;
+        m_isSubdived = true;
     }
 }
 
 void Node::insert(std::weak_ptr<Object> t_object)
 {
-    if (m_canSubdivide)
+    if (m_isSubdived)
     {
         size_t index = getIndex(t_object.lock()->getGlobalBounds());
         if (contains(m_childNodes[index]->m_shapeBounds, t_object.lock()->getGlobalBounds()))
@@ -76,7 +76,7 @@ void Node::render(sf::RenderTarget& t_target) const
     shape.setOutlineColor(sf::Color::Black);
     shape.setFillColor(sf::Color::Transparent);
     t_target.draw(shape);
-    if (m_canSubdivide)
+    if (m_isSubdived)
     {
         for (auto& child : m_childNodes)
         {
@@ -89,7 +89,7 @@ void Node::clear()
 {
     m_colliders.clear();
     m_objects.clear();
-    if (!m_canSubdivide)
+    if (!m_isSubdived)
     {
         return;
     }
@@ -100,7 +100,7 @@ void Node::clear()
             child->clear();
             child.reset(nullptr);
         }
-        m_canSubdivide = false;
+        m_isSubdived = false;
     }
 }
 
@@ -141,7 +141,7 @@ std::vector<std::weak_ptr<Object>> Node::getColliders(sf::FloatRect const& t_obj
     else
     {
         std::vector<std::weak_ptr<Object>> ret;
-        if (m_canSubdivide)
+        if (m_isSubdived)
         {
             size_t possibleIndex = getIndex(t_objectBounds);
             if (contains(m_childNodes[possibleIndex]->m_shapeBounds, t_objectBounds))
@@ -189,7 +189,7 @@ std::vector<std::weak_ptr<Object>> Node::getColliders(sf::FloatRect const& t_obj
 std::vector<std::weak_ptr<Object>> Node::getObjects() const
 {
     std::vector<std::weak_ptr<Object>> ret;
-    if (m_canSubdivide)
+    if (m_isSubdived)
     {
         for (auto const& child : m_childNodes)
         {
