@@ -64,7 +64,7 @@ void SpatialHash::setUpGrid()
         {
             for (int offset : offsetsFromCenter[i])
             {
-                m_offset[i] = offset;
+                m_offset[j] = offset;
                 j++;
             }
             m_offsetBetweenCells[i] = j;
