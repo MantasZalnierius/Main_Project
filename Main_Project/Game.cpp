@@ -15,7 +15,7 @@ void Game::setUpFontAndText()
 		std::cout << "problem loading arial black font" << std::endl;
 	}
 
-	m_typeOfGrid = " NONE";
+	m_typeOfGrid = " NO GRID";
 
 	m_collisionNumberText.setFont(m_font);
 	m_collisionNumberText.setString("COLLISION CHECKS: " + std::to_string(m_collisionChecks));
