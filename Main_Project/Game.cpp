@@ -90,6 +90,7 @@ void Game::processEvents()
 
 void Game::processMouseEvents(sf::Event t_event)
 {
+	// If the left mouse button is pressed within the bounds of the grids, then create an object within the grid.
 	if (t_event.key.code == sf::Mouse::Left)
 	{
 		sf::Vector2f mousePos = Window::getWindow().mapPixelToCoords(sf::Mouse::getPosition(Window::getWindow()));
@@ -103,18 +104,20 @@ void Game::processMouseEvents(sf::Event t_event)
 			m_objects.back()->setVelocity({ velX, velY });
 			if (m_useSpaitalHasing)
 			{
-				m_spaitalHashMap.addObject(obj);
+				m_spaitalHashMap.insert(obj);
 			}
 			m_numberOfObjectsText.setString("OBJECTS: " + std::to_string(m_objects.size()));
 		}
 	}
+	// If the left mouse button is pressed within the bounds of the grids, then create an object within the grid.
 }
 
 void Game::processKeyEvents(sf::Event t_event)
 {
+	// Handles events for using grid or no grid.
 	if (t_event.key.code == sf::Keyboard::P)
 	{
-		m_showSpatialMap = (m_showSpatialMap == true) ? false : true;
+		m_showGrids = (m_showGrids == true) ? false : true;
 	}
 	if (t_event.key.code == sf::Keyboard::Space)
 	{
@@ -124,7 +127,9 @@ void Game::processKeyEvents(sf::Event t_event)
 	{
 		m_NoGrid = (m_NoGrid == true) ? false : true;
 	}
+	// Handles events for using grid or no grid.
 
+	// Updates the text for which grid you have active.
 	if (m_NoGrid)
 	{
 		m_typeOfGrid = " NO GRID";
@@ -138,13 +143,15 @@ void Game::processKeyEvents(sf::Event t_event)
 		m_typeOfGrid = " QUAD-TREE GRID";
 	}
 	m_typeOfGridText.setString("GRID TYPE: " + m_typeOfGrid);
+	// Updates the text for which grid you have active.
 }
 
 void Game::update(sf::Time t_deltaTime)
 {
 	m_collisionChecks = 0;
-	for (auto& object : m_objects) {
-		object->setColor(sf::Color::Red);
+	for (auto& object : m_objects) 
+	{
+		object->setColor(m_RED);
 		object->update(t_deltaTime);
 		updateWithNoGrid(t_deltaTime);
 		updateWithSpitalGrid(t_deltaTime, object);
@@ -162,7 +169,10 @@ void Game::updateWithNoGrid(sf::Time t_deltaTime)
 			for (int j = 0; j < m_objects.size(); j++)
 			{
 				if (i == j) continue;
-				CollisionHandler::Box2Box(m_objects.at(i), m_objects.at(j), m_collisionChecks);
+				else
+				{
+					CollisionHandler::Box2Box(m_objects.at(i), m_objects.at(j), m_collisionChecks);
+				}
 			}
 		}
 	}
@@ -171,37 +181,40 @@ void Game::updateWithNoGrid(sf::Time t_deltaTime)
 void Game::updateWithSpitalGrid(sf::Time t_deltaTime, std::shared_ptr<Object> t_object)
 {
 	std::vector<std::shared_ptr<Object>> colliders;
-	if (m_objects.size() > 1 && m_useSpaitalHasing && !m_NoGrid) // SPITAL HASHING.
+	if (m_objects.size() > 1 && m_useSpaitalHasing && !m_NoGrid) // SPITAL HASHING GRID.
 	{
 		colliders = m_spaitalHashMap.spaitalSearch(t_object, 90);
 		for (auto& collider : colliders)
 		{
 			CollisionHandler::Box2Box(collider, t_object, m_collisionChecks);
 		}
-		m_spaitalHashMap.updateObject(t_object);
+		m_spaitalHashMap.update(t_object);
 	}
 }
 
 void Game::updateWithQuadTree(sf::Time t_deltaTime)
 {
-	if (!m_useSpaitalHasing && !m_NoGrid) // QUAD-TREE.
+	if (!m_useSpaitalHasing && !m_NoGrid) // QUAD-TREE GRID.
 	{
 		m_quadTreeMap.clear();
 		m_quadTreeMap.insert(m_objects);
-		handleCollisions();
+		handleQuadTreeCollisions();
 	}
 }
 
 void Game::render()
 {
+	// Renders the game, renders grids dependent on which one is currently active.
 	Window::getWindow().clear(sf::Color::White);
-	for (auto const& object : m_objects)
-		Window::getWindow().draw(*object);
-	if (m_showSpatialMap && !m_useSpaitalHasing && !m_NoGrid)
+	for (auto& object : m_objects)
 	{
-		m_quadTreeMap.render(Window::getWindow());
+		object->render();
 	}
-	else if (m_showSpatialMap && !m_NoGrid)
+	if (m_showGrids && !m_useSpaitalHasing && !m_NoGrid)
+	{
+		m_quadTreeMap.render();
+	}
+	else if (m_showGrids && !m_NoGrid)
 	{
 		m_spaitalHashMap.render();
 	}
@@ -210,11 +223,13 @@ void Game::render()
 	Window::getWindow().draw(m_framesText);
 	Window::getWindow().draw(m_typeOfGridText);
 	Window::getWindow().display();
+	// Renders the game, renders grids dependent on which one is currently active.
 }
 
-void Game::handleCollisions()
+void Game::handleQuadTreeCollisions()
 {
-	if (m_objects.size() <= 0)
+	// Handles quad-tree collisions when the quad-tree is active.
+	if (m_objects.size() <= 0) // if there are no objects in the grid, no need to do anything.
 	{
 		return;
 	}
@@ -222,13 +237,15 @@ void Game::handleCollisions()
 	{
 		for (int i = 0; i < m_objects.size(); ++i)
 		{
-			std::vector<std::weak_ptr<Object>> nearbyColliders = m_quadTreeMap.getColliders(m_objects[i]->getGlobalBounds());
-			if (nearbyColliders.size() <= 1)
+			// Gets nearby colliders from an object.
+			std::vector<std::weak_ptr<Object>> nearbyColliders = m_quadTreeMap.getColliders(m_objects[i]->getGlobalBounds()); 
+			if (nearbyColliders.size() <= 1) // if there are 1 or less colliders than don't do anything.
 			{
 				continue;
 			}
 			else
 			{
+				// Go through each collider and see if they are collding with anything nearby.
 				for (int j = 0; j < nearbyColliders.size(); ++j)
 				{
 
@@ -244,4 +261,5 @@ void Game::handleCollisions()
 			}
 		}
 	}
+	// Handles quad-tree collisions when the quad-tree is active.
 }

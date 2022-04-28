@@ -122,6 +122,9 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SFML_SDK)/include</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <OutputFile>$(SFML_SDK)/include</OutputFile>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
